@@ -16,18 +16,6 @@ In alignment with best practices, sample data was ingested, modeled, and queried
 
 ## 📁 Repository Structure
 
-- `assessment_question1.sql` —  
-  Identifies customers who have **at least one funded savings plan and one funded investment plan**. I aggregated counts and total deposits (converted from kobo to naira) for each user. The approach involved joining user profiles with filtered savings and investment accounts to isolate only those fully funded plans, ensuring meaningful inclusion.
-
-- `assessment_question2.sql` —  
-  Analyzes **transaction frequency per customer**, classifying users into High, Medium, or Low frequency groups based on their average monthly transactions. I calculated tenure in months and total transactions, then derived the transaction rate per month before categorization. This helps understand customer engagement levels quantitatively.
-
-- `assessment_question3.sql` —  
-  Flags customers with accounts **inactive for over 365 days**, based on the date of their latest inflow transaction. The query finds the most recent deposit per customer and filters those with no activity for over a year, which could signal churn risk or dormancy. This analysis is crucial for targeted retention efforts.
-
-- `assessment_question4.sql` —  
-  Estimates **Customer Lifetime Value (CLV)** using a simplified profit model based on tenure, total transactions, and total transaction amounts. I carefully handled cases with zero or null values to avoid skewed calculations, converting amounts into naira and projecting annualized transaction revenue. This provides a data-driven estimate of customer value over time.
-
 Each file uses Common Table Expressions (CTEs) to break down complex logic into manageable parts, with comments explaining the intent of each step to maintain clarity and ease debugging.
 
 ---
