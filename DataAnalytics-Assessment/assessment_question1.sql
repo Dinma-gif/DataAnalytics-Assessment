@@ -36,7 +36,7 @@ with
     final as (
         select
             u.user_id as owner_id,
-            -- Construct full name or default to 'Unknown' if blank
+            -- Construct full name or default to 'Unknown' if field is blank
             coalesce(
                 nullif(
                     trim(
@@ -48,7 +48,7 @@ with
             ) as name,
             s.savings_count,
             i.investment_count,
-            -- Convert kobo to naira and round to 2 decimal places
+            --  This section Converts the amount from kobo to naira and round to 2 decimal places
             round(
                 ((s.savings_deposit_kobo + i.investment_deposit_kobo)::numeric) / 100, 2
             ) as total_deposits
