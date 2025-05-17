@@ -32,27 +32,85 @@ Each file uses Common Table Expressions (CTEs) to break down complex logic into 
 
 ---
 
-## 💡 Approach & Challenges
+# SQL Queries Analysis & Explanation
 
-### Thought Process
-
-For each question, I prioritized writing clear, modular SQL that is easy to understand and maintain. I chose to use CTEs extensively to isolate logical steps such as filtering relevant users, aggregating transactions, or calculating date differences. This approach made debugging and testing easier.
-
-I also made sure to consistently convert monetary amounts from kobo (smallest currency unit in the dataset) to naira, as this reflects realistic currency units for financial analysis.
-
-### Challenges Faced
-
-- **Date and Interval Handling:** AWS RDS PostgreSQL required specific syntax for date difference calculations (`DATEDIFF` isn’t native). I adapted by using `DATE_PART` and arithmetic expressions to get accurate tenure and inactivity durations.  
-- **Joins on Large Tables:** Some tables had millions of rows, so I carefully filtered early in CTEs to reduce dataset size before joins, which improved performance noticeably.  
-- **Null and Zero Values:** To avoid errors like division by zero and to keep calculations meaningful, I added safeguards with `COALESCE` and `HAVING` clauses to exclude irrelevant rows.
-
-### Performance Optimization
-
-- Used `INNER JOIN` instead of `LEFT JOIN` when I wanted to ensure existence of both savings and investment plans, avoiding unnecessary rows.  
-- Aggregated counts and sums in grouped CTEs to reduce the amount of data handled downstream.  
-- Indexed key columns (in the source database) such as `owner_id` and `plan_id` to speed up join operations (outside the scope of SQL scripts, but noted for production environments).
+This repository contains four SQL queries designed to analyze customer savings and investment data. Each query addresses a specific business question, leveraging common table expressions (CTEs) for modular, readable logic.
 
 ---
+
+## Query 1: Identify Customers with Funded Savings and Investment Plans
+
+### Approach
+- Extract user details with normalized names (capitalized, defaulting to 'Unknown' if absent).
+- Aggregate savings and investment accounts separately:
+  - Count distinct plans per user.
+  - Sum confirmed deposits (only funded plans with deposits > 0).
+- Join these aggregates to find users having **at least one funded savings plan and one funded investment plan**.
+- Calculate total deposits in Nigerian Naira (converting from kobo) and present results ordered by deposit amount.
+
+### Challenges
+- Handling users with missing or null names: used `coalesce` and `nullif` to generate readable output.
+- Ensuring deposits summed only positive confirmed amounts.
+- Correct conversion from kobo to naira, with rounding to two decimals.
+
+---
+
+## Query 2: Customer Transaction Frequency Categorization
+
+### Approach
+- Calculate monthly transaction counts per customer using `date_trunc` for month grouping.
+- Compute average monthly transactions per customer.
+- Categorize customers into **High, Medium, and Low frequency** based on thresholds (>=10, 3–9, <3 transactions).
+- Aggregate customer counts and average transaction rates per category for reporting.
+
+### Challenges
+- Grouping transactions by month efficiently.
+- Defining meaningful frequency categories for customer segmentation.
+- Ensuring averages correctly reflect the monthly transaction behavior over the period.
+
+---
+
+## Query 3: Detect Inactive Plans Over 365 Days
+
+### Approach
+- Determine the latest inflow transaction per plan (savings or investment) for active users.
+- Filter plans where the latest transaction was more than 365 days ago.
+- Classify plans as Savings or Investment based on plan attributes.
+- Calculate days of inactivity for monitoring purposes.
+
+### Challenges
+- Accurately identifying the latest positive transaction per plan.
+- Handling multiple plan types with conditional logic.
+- Using date arithmetic to calculate inactivity duration.
+
+---
+
+## Query 4: Estimate Customer Lifetime Value (CLV)
+
+### Approach
+- Calculate each customer's tenure in months based on `date_joined`.
+- Aggregate total transactions and amounts per customer with tenure >= 1 month.
+- Compute an estimated CLV formula that scales average transactions per year by average transaction amount (scaled to thousands).
+- Present customers ordered by descending estimated CLV.
+
+### Challenges
+- Computing tenure in months (used database-specific date difference function).
+- Avoiding division by zero when calculating average transaction amount.
+- Combining multiple metrics into a meaningful single CLV estimate.
+
+---
+
+## General Challenges & Resolutions
+
+- **Data Quality:** Missing or null values were handled explicitly using `coalesce` and default values.
+- **Date Calculations:** Different date functions and truncation were used to ensure accurate time-based aggregations.
+- **Performance:** Use of CTEs allowed breaking down complex queries into manageable parts, improving readability and maintainability.
+- **Currency Conversion:** Carefully converted kobo to naira with appropriate rounding to maintain financial accuracy.
+
+---
+
+If you have any questions or need further explanation, feel free to reach out!
+
 
 
 
