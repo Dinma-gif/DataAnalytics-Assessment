@@ -3,3 +3,13 @@
 target/
 dbt_packages/
 logs/
+# Ignore everything
+/*
+
+# Allow these files and folders
+!DataAnalytics-Assessment/
+!DataAnalytics-Assessment/**
+!dbt_project.yml
+!packages.yml
+
+
