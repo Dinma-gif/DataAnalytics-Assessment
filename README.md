@@ -20,6 +20,7 @@ Each file uses Common Table Expressions (CTEs) to break down complex logic into 
 
 
 ## Query 1: Identify Customers with Funded Savings and Investment Plans
+📄 [View SQL]([Data/query1_funded_customers.sql](https://github.com/Dinma-gif/DataAnalytics-Assessment/blob/main/DataAnalytics-Assessment/assessment_question1.sql])
 
 ### Approach
 - Extract user details with normalized names (capitalized, defaulting to 'Unknown' if absent).
