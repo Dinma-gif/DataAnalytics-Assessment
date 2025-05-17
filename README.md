@@ -18,13 +18,6 @@ In alignment with best practices, sample data was ingested, modeled, and queried
 
 Each file uses Common Table Expressions (CTEs) to break down complex logic into manageable parts, with comments explaining the intent of each step to maintain clarity and ease debugging.
 
----
-
-# SQL Queries Analysis & Explanation
-
-This repository contains four SQL queries designed to analyze customer savings and investment data. Each query addresses a specific business question, leveraging common table expressions (CTEs) for modular, readable logic.
-
----
 
 ## Query 1: Identify Customers with Funded Savings and Investment Plans
 
