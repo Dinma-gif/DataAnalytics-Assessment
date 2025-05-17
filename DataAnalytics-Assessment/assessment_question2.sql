@@ -1,4 +1,4 @@
--- Step 1: Calculate the number of transactions per customer per month
+-- Calculate the number of transactions per customer per month
 with
     monthly_transactions as (
         select
@@ -9,7 +9,7 @@ with
         group by owner_id, month_year
     ),
 
-    -- Step 2: Calculate average monthly transactions per customer and categorize
+    -- Calculate average monthly transactions per customer and categorize
     -- frequency
     customer_avg_transactions as (
         select
