@@ -29,7 +29,7 @@ select
     owner_id,
     type,
     last_transaction_date,
-    extract(day from (current_date - last_transaction_date))::integer as inactivity_days
+    extract(day from (current_date - last_transaction_date))::integer as inactivity_days -- extract activity days by subtracting last_tran_date from current date
 from last_inflow_per_plan
 where current_date - last_transaction_date > 365
 order by inactivity_days desc
