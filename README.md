@@ -1,7 +1,5 @@
 # Cowrywise Data Analytics Assessment
 
-# Cowrywise Data Analytics Assessment
-
 This repository presents a comprehensive response to the Cowrywise Data Analytics Assessment. It includes SQL-based solutions to four analytical business questions, with each query designed to be efficient, scalable, and clearly interpretable.
 
 In alignment with best practices, sample data was ingested, modeled, and queried using Amazon Web Services (AWS), ensuring cloud-scale reproducibility and performance.
