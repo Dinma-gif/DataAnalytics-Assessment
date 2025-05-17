@@ -20,7 +20,7 @@ Each file uses Common Table Expressions (CTEs) to break down complex logic into 
 
 
 ## Query 1: Identify Customers with Funded Savings and Investment Plans
-📄 [View SQL]([Data/query1_funded_customers.sql](https://github.com/Dinma-gif/DataAnalytics-Assessment/blob/main/DataAnalytics-Assessment/assessment_question1.sql])
+📄 [View SQL]([DataAnalytics-Assessment/assessment_question1.sql])
 
 ### Approach
 - Extract user details with normalized names (capitalized, defaulting to 'Unknown' if absent).
@@ -38,6 +38,7 @@ Each file uses Common Table Expressions (CTEs) to break down complex logic into 
 ---
 
 ## Query 2: Customer Transaction Frequency Categorization
+📄 [View SQL]([DataAnalytics-Assessment/assessment_question2.sql])
 
 ### Approach
 - Calculate monthly transaction counts per customer using `date_trunc` for month grouping.
@@ -53,6 +54,7 @@ Each file uses Common Table Expressions (CTEs) to break down complex logic into 
 ---
 
 ## Query 3: Detect Inactive Plans Over 365 Days
+📄 [View SQL]([DataAnalytics-Assessment/assessment_question3.sql])
 
 ### Approach
 - Determine the latest inflow transaction per plan (savings or investment) for active users.
@@ -68,6 +70,7 @@ Each file uses Common Table Expressions (CTEs) to break down complex logic into 
 ---
 
 ## Query 4: Estimate Customer Lifetime Value (CLV)
+📄 [View SQL]([DataAnalytics-Assessment/assessment_question4.sql])
 
 ### Approach
 - Calculate each customer's tenure in months based on `date_joined`.
