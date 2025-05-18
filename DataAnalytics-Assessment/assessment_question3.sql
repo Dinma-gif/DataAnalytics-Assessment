@@ -1,36 +1,36 @@
--- Step 1: Find the latest inflow transaction per plan (Savings or Investment) for
--- active users
-with
-    last_inflow_per_plan as (
-        select
-            p.id as plan_id,
-            p.owner_id,
-            case
-                when p.is_a_fund = true
-                then 'Investment'
-                when p.is_regular_savings = true
-                then 'Savings'
-                else 'Other'
-            end as type,
-            max(sa.transaction_date) as last_transaction_date
-        from plans_plan p
-        join users_customuser u on p.owner_id = u.id
-        join savings_savingsaccount sa on p.id = sa.plan_id
-        where
-            u.is_active = true
-            and (p.is_regular_savings = true or p.is_a_fund = true)
-            and sa.confirmed_amount > 0  -- Only positive inflow transactions
-        group by p.id, p.owner_id, p.is_regular_savings, p.is_a_fund
-    )
-
--- Step 2: Select plans with no inflow transactions for more than 365 days
-select
-    plan_id,
-    owner_id,
-    type,
-    last_transaction_date,
-    extract(day from (current_date - last_transaction_date))::integer as inactivity_days -- extract activity days by subtracting last_tran_date from current date
-from last_inflow_per_plan
-where current_date - last_transaction_date > 365
-order by inactivity_days desc
-;
+-- Purpose: Identify inactive savings or investment plans with no inflows in the last 365 days
+WITH active_plans AS (
+    SELECT
+        id AS plan_id,
+        owner_id,
+        CASE
+            WHEN is_a_fund THEN 'Investment'
+            WHEN is_regular_savings THEN 'Savings'
+            ELSE 'Other'
+        END AS plan_type
+    FROM plans_plan
+    WHERE is_regular_savings = TRUE OR is_a_fund = TRUE
+),
+last_inflows AS (
+    SELECT
+        plan_id,
+        MAX(transaction_date) AS last_transaction_date
+    FROM savings_savingsaccount
+    WHERE confirmed_amount > 0
+    GROUP BY plan_id
+)
+SELECT
+    ap.plan_id,
+    ap.owner_id,
+    ap.plan_type,
+    li.last_transaction_date,
+     -- 9999 is a place holder for customers who havent transacted at all
+    COALESCE(DATEDIFF(day, li.last_transaction_date, CURRENT_DATE), 9999) AS inactivity_days
+FROM active_plans ap
+LEFT JOIN last_inflows li ON ap.plan_id = li.plan_id
+WHERE
+    li.last_transaction_date IS NULL OR
+    DATEDIFF(day, li.last_transaction_date, CURRENT_DATE) > 365
+ORDER BY
+    li.last_transaction_date IS NULL DESC,
+    inactivity_days DESC;
